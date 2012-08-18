@@ -1,0 +1,63 @@
+<html>
+<head>
+</head>
+<body>
+<h1>hello</h1>
+<textarea style="width:900px;height:400px" id='displayArea' >
+</textarea>
+<br>
+<input type='text' id='input'/>
+<script>
+//var str;
+var x;
+var input=document.getElementById('input');
+ajax(fetch);
+function ajax(ajaxCallback,str){
+	console.log('ajax');
+var httpRequest;
+httpRequest=new XMLHttpRequest;
+httpRequest.onreadystatechange=function(){
+	ajaxCallback(httpRequest);
+}
+httpRequest.open('POST','/',true);
+httpRequest.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+x=httpRequest;
+if(str)
+	httpRequest.send('str='+str);
+else
+	httpRequest.send('string=');
+	console.log('/ajax');
+}
+var displayArea=document.getElementById('displayArea');
+function display(str){
+	displayArea.value+=str+"\n";
+	input.focus();
+}
+function fetch(httpRequest){
+	if(httpRequest.readyState === 4){
+		if(httpRequest.status === 200){
+			console.log(httpRequest.responseText);
+			display(httpRequest.responseText);
+			ajax(fetch);
+		}
+		else if(httpRequest.status === 408){
+			ajax(fetch);
+			console.log(httpRequest.status);
+		}
+	}
+};
+function sendCallback(){
+
+};
+input.addEventListener('keydown',function(e){
+			if(e.keyCode===13){
+				send();
+			}
+		});
+function send(){
+	ajax(sendCallback,input.value);
+	input.value='';
+}
+</script>
+</body>
+</html>
